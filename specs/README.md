@@ -124,10 +124,10 @@ specs/
 
 ## Twój pierwszy spec
 
-Pierwsze ćwiczenie spec-driven — **zacznij od czegoś małego**, żeby poczuć rytm. Dobre kandydaty (z listy ćwiczeń w `CLAUDE.md`):
+Pierwsze podejście do spec-driven — **zacznij od czegoś małego**, żeby poczuć rytm. Dobre kryteria pierwszego spec'u:
 
-1. **Komponent ProductCard** — najprostszy, jeden komponent, brak bazy danych. Świetny na start.
-2. **Strona profilu sprzedawcy** — dodaje route, pobieranie z bazy, RLS. Dobry drugi krok.
-3. **Formularz zwrotu** — dodaje formularz, walidację, mutację. Trzecia ścieżka.
+- **Pojedynczy komponent lub mały widok** — np. karta produktu, formularz logowania, header strony
+- **Bez bazy danych** — żebyś nie wpadł od razu na RLS i migracje. Te przyjdą w drugim spec'u.
+- **Coś co realnie chcesz zaimplementować** — nie ćwiczenie dla ćwiczenia. Może to być pierwsza część rekomendacji którą przyniosłeś z Claude.ai, fragment scrapowanej strony FashionHero, lub konkretny element nowego prototypu.
 
-Po 3 udanych spec'ach zaczniesz czuć kiedy spec-driven się opłaca, a kiedy "po prostu zrób to" jest szybsze.
+Po 2-3 udanych spec'ach zaczniesz czuć kiedy spec-driven się opłaca, a kiedy "po prostu zrób to" jest szybsze.

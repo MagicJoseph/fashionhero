@@ -2,7 +2,7 @@
 
 > 🎓 **Template repozytorium dla kursantów AI Product Heroes**
 >
-> To środowisko nauki Claude Code dla projektantów UX. **FashionHero to fikcyjny case study** — nie ma realnych użytkowników, inwestorów ani produkcji. Każdy błąd jest tu lekcją, nie incydentem.
+> To środowisko nauki Claude Code dla projektantów UX. **FashionHero to spreparowana strona kursowa** dostępna pod `fashionhero.aiproductheroes.pl` — nie ma za nią realnego biznesu ani użytkowników. Każdy błąd jest tu lekcją, nie incydentem.
 
 ---
 
@@ -110,15 +110,42 @@ W aktywnej sesji Claude Code:
 
 Claude wykona setup, doda 4 podstawowe komponenty shadcn (button, card, input, label), uruchomi serwer.
 
-### Krok 7: Zacznij od pierwszego ćwiczenia
+### Krok 7: Wybierz swoją ścieżkę startu
 
-W `CLAUDE.md` masz listę 5 sugerowanych ćwiczeń. Najprostsze na start:
+Masz teraz działające środowisko — czas na pierwsze realne zadanie. Trzy najczęstsze ścieżki:
+
+**A) Implementacja rekomendacji z Claude.ai**
+
+Jeśli wcześniej rozmawiałeś z Claude.ai o FashionHero i masz konkretną rekomendację zmiany do wdrożenia:
 
 ```
-> Zaimplementujmy pierwsze ćwiczenie z @CLAUDE.md — komponent ProductCard.
+> Mam rekomendację zmiany dla FashionHero, którą chcę zaimplementować.
+  Zacznijmy od stworzenia spec'u w @specs/ — zadaj mi pytania pogłębiające,
+  potem ułożymy plan implementacji.
 ```
 
-Claude zada pytania pogłębiające, zaproponuje plan, zaimplementuje. **Zacznij małymi iteracjami.**
+**B) Scraping istniejącej strony FashionHero**
+
+Jeśli chcesz pracować na klonie strony `fashionhero.aiproductheroes.pl`:
+
+```
+> Przeskrapuj stronę https://fashionhero.aiproductheroes.pl/ i przygotuj
+  raport: struktura informacyjna, powtarzalne komponenty UI,
+  schemat kolorystyczny, typografia. NIE pisz jeszcze kodu — najpierw raport.
+```
+
+(Zobacz Część 6 głównego przewodnika — `docs/02-claude-code-dla-projektantow-ux.md` — żeby zrozumieć pełen workflow scrapingu.)
+
+**C) Budowa od zera**
+
+Jeśli chcesz zbudować coś nowego z domeną FashionHero (sprzedawcy, kupujący, produkty) jako inspiracją:
+
+```
+> Chcę zbudować [nazwa funkcjonalności]. Pomóż mi napisać spec w @specs/
+  — zadaj pytania pogłębiające, potem ułóż plan implementacji.
+```
+
+**Niezależnie od wybranej ścieżki** — Claude zada pytania, zaproponuje plan, zaimplementuje krok po kroku. **Zacznij małymi iteracjami.**
 
 ### Krok 8: Pierwszy commit i push
 
@@ -126,7 +153,7 @@ Po pierwszym działającym fragmencie kodu:
 
 ```bash
 git add .
-git commit -m "Add Next.js scaffolding and first ProductCard component"
+git commit -m "Initial Next.js scaffolding"
 git push
 ```
 
@@ -178,7 +205,7 @@ Pełna ścieżka rozpisana w `docs/02-claude-code-dla-projektantow-ux.md` (Podsu
 
 ### Tydzień 3-4: Pierwsze realne komponenty
 - Stwórz pierwszy własny skill (`prompt-builder` — Część 5 instrukcji)
-- Implementuj 3-5 ćwiczeń z listy w `CLAUDE.md`
+- Zaimplementuj swoją pierwszą rekomendację (z Claude.ai) lub fragment scrapowanej strony
 - Pierwszy spec-driven feature (Część 14)
 - **Środowisko: przerzuć się na Claude Code Desktop** (Część 15)
 

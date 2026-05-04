@@ -9,11 +9,12 @@
 
 ## ⚠️ Important context: this is a learning environment
 
-**FashionHero is a fictional case study used in the AI Product Heroes course.** It does not correspond to a real, running production system. There are no live users, no investors, no SLA, no on-call rotation.
+**FashionHero is a course exercise environment**, not a real production system. The website exists at `fashionhero.aiproductheroes.pl` as a prepared exercise site for the AI Product Heroes course — it's a sandbox for practicing product changes, not a running business.
 
-This project exists so that **a UX designer can learn Claude Code** by:
-- Building prototypes
-- Testing product ideas and concepts
+This project exists so that **a UX designer can practice Claude Code** by:
+- Implementing recommendations developed earlier (e.g., in conversations with Claude.ai) on the FashionHero site
+- Building prototypes — either by scraping the existing site or starting from scratch
+- Testing product ideas and concepts in code
 - Practicing AI-driven Product Builder ("vibe coder") workflows
 - Failing safely — every mistake here is a lesson, not an incident
 
@@ -29,29 +30,34 @@ This project exists so that **a UX designer can learn Claude Code** by:
 
 ---
 
-## About the case study (fiction, but useful)
+## About the FashionHero exercise
 
-**FashionHero** is presented in course materials as a fashion marketplace connecting independent sellers with buyers in Poland. Course documents describe it as a 2.4M-user platform with revenue and growth challenges. None of this is real — but the **scenarios are realistic**, which makes them good practice ground for product designers learning to build with AI.
+The FashionHero website is **part of course infrastructure** — a prepared site representing a fashion marketplace (sellers, buyers, products). The accompanying course materials describe it as a Polish fashion marketplace with growth and margin challenges, but **it's a teaching artifact, not an active product.**
 
-**Why this matters for code:**
-- The **UI texts, mock data, and product domain** (sellers, buyers, products, returns) come from the case study and should be used in prototypes for consistency with course exercises
-- The **scale numbers** (2.4M users, etc.) are narrative — don't over-engineer for them. A prototype is a prototype.
+**How designers typically use FashionHero in this project:**
+- **Recommendation implementation** — bring a product change recommendation developed elsewhere (e.g., from a Claude.ai conversation about FashionHero's business situation) and implement it as a working prototype
+- **Site clone + modify** — scrape the existing FashionHero site as a starting point, then iterate
+- **From scratch** — build a new prototype using FashionHero's domain (sellers, buyers, products) as inspiration
+
+**What this means for Claude:**
+- Don't assume which path the designer chose — **ask** at the start of significant work whether they're modifying a scraped clone, building from scratch, or implementing a specific recommendation
+- The **product domain** (sellers, buyers, products, returns, promoted listings) is consistent across the course, so use these terms naturally when relevant
+- The **scale numbers** in course materials (millions of users etc.) are narrative — don't over-engineer for them. A prototype is a prototype.
 - **There is no production environment** — Vercel deploys are personal previews, Supabase is a learning sandbox
 
 ---
 
-## Tech stack (the one used in the course)
+## Tech stack
 
-The course teaches a specific, modern, opinionated stack. Stick to it — using "different but equivalent" tools will make Claude's answers diverge from course materials.
-
-- **Framework:** Next.js 15 (App Router) + TypeScript
-- **Styling:** Tailwind CSS v4 + shadcn/ui (CLI v4, base color: Slate, CSS variables: Yes)
+- **Framework:** Next.js 15 (App Router) + TypeScript (strict mode)
+- **Styling:** Tailwind CSS + shadcn/ui (CLI v4, style: New York, base color: Slate, CSS variables: Yes)
 - **Database:** Supabase (PostgreSQL + Auth + Storage)
-- **Hosting:** Vercel (personal preview deployments — no production domain)
-- **Repo:** GitHub (personal repos for exercises)
+- **Hosting:** Vercel (personal preview deployments)
+- **Repo:** GitHub
 - **Editor:** VS Code with ESLint + Prettier extensions
+- **Package manager:** npm
 
-> If the designer asks "can I use [other tool]?" → explain the trade-off, but **gently steer toward the course stack** for now. Once they have one project working end-to-end, they can experiment.
+> If the designer asks "can I use [other tool]?" → explain the trade-off, but **gently steer toward this stack** for consistency. Once they have one project working end-to-end, they can experiment.
 
 ---
 
@@ -123,7 +129,7 @@ src/
 │   └── validation/         # Zod schemas for forms
 ├── types/
 │   └── supabase.ts         # Generated DB types (regenerate after every migration)
-specs/                      # Feature specifications (spec-driven workflow — Part 14)
+specs/                      # Feature specifications (spec-driven workflow — see section below)
 └── _templates/             # Spec templates
 supabase/
 ├── migrations/             # SQL migrations (chronological, never edit applied ones)
@@ -157,16 +163,33 @@ These workflows are taught in the course not because the designer is shipping to
 - **Description:** What changes / How to test / Screenshots
 - Self-review before merge → squash & merge into main
 
-### When to use spec-driven development (Part 14)
+### Spec-driven development for larger changes
 
-The designer should **practice spec-driven on at least one feature per project**, even when it feels like overkill. The course covers it for a reason.
+For larger changes, work spec-first:
 
-If a feature:
-- Touches 3+ files, OR
+1. **Write a spec** in `specs/[name].md` describing **what** to build (not how)
+2. **Generate a plan** — read the spec, propose the implementation in `specs/[name]-plan.md`
+3. **Implement step by step** — wait for approval after each major step
+
+A spec contains:
+- Why (business goal — even if the goal is just learning)
+- User stories
+- Fields/data (table)
+- Access rules (RLS)
+- Edge cases
+- Acceptance criteria
+- What IS out of scope
+
+Templates available in `specs/_templates/`: `feature.md`, `change.md`, `experiment.md`. The designer should copy the appropriate template, fill it in, then ask you to plan the implementation.
+
+**When to use spec-driven** (suggest it gently if any apply):
+- Feature touches 3+ files, OR
 - Has a DB migration + RLS, OR
 - Has non-obvious edge cases
 
-→ **suggest writing `specs/[name].md` first.** Don't insist if they push back, but plant the seed.
+The designer should **practice spec-driven on at least one feature per project**, even when it feels like overkill. Don't insist if they push back, but plant the seed.
+
+> **Teaching note:** the first time the designer writes a spec, expect it to be incomplete. Read it, ask 2-3 questions to fill the gaps, then help them update the spec. The goal isn't a perfect spec on attempt #1 — it's learning what makes a spec useful.
 
 ---
 
@@ -190,39 +213,6 @@ If a feature:
 - **Seed:** `supabase/seed.sql` — mock products and sellers based on FashionHero case study
 
 > **Teaching note:** when generating mock data, use **realistic but obviously-fake** content. Real-looking product names from the FashionHero domain (clothing, accessories, shoes), but with prefixes like "Demo " or absurd brand names like "FakeBrand Co." It teaches the designer to spot real-vs-mock at a glance.
-
----
-
-## `specs/` folder — spec-driven workflow (Part 14)
-
-For each larger feature, the designer creates `specs/[name].md` containing:
-- Why (business goal — even if the goal is just learning)
-- User stories
-- Fields/data (table)
-- Access rules (RLS)
-- Edge cases
-- Acceptance criteria
-- What IS out of scope
-
-After writing the spec → Claude generates `specs/[name]-plan.md` → designer accepts → Claude implements step by step.
-
-Templates in `specs/_templates/`: `feature.md`, `change.md`, `experiment.md`.
-
-> **Teaching note:** the first time the designer writes a spec, expect it to be incomplete. Read it, ask 2-3 questions to fill the gaps, then help them update the spec. The goal isn't a perfect spec on attempt #1 — it's learning what makes a spec useful.
-
----
-
-## Suggested practice exercises (FashionHero scenarios)
-
-Pulled from the course materials. Use these as natural prompts when the designer asks "what should I build next?":
-
-1. **Product card component** — list view of a product (image, brand, name, price, favorite icon)
-2. **Seller profile page** — `/seller/[slug]` with seller info + their listings
-3. **Return form** — buyer initiates a return with reason + photos
-4. **Promoted listings panel** — seller marks a product as promoted (the FashionHero narrative's Q2 priority)
-5. **Mobile-optimized checkout** — single-page checkout focused on mobile UX
-
-> Each of these is a self-contained learning unit. Don't combine them. **One exercise = one branch = one PR = one merged feature.**
 
 ---
 
