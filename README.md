@@ -8,13 +8,17 @@
 
 ## Czym jest to repo
 
-To jest **template repository** GitHub — gotowe środowisko startowe do nauki Claude Code w stacku **Next.js + shadcn/ui + Supabase + Vercel**. Klikasz **"Use this template"** na górze strony GitHub i masz własne repozytorium z kompletną konfiguracją:
+To jest **template repository** GitHub — **samobieżne** środowisko startowe do nauki Claude Code w stacku **Next.js + shadcn/ui + Supabase + Vercel**. Klikasz **"Use this template"** na górze strony GitHub, klonujesz, `npm install`, `npm run dev` — i już działa.
 
-- ✅ **Skonfigurowany Claude Code** — `CLAUDE.md` z kontekstem mentora, `.claude/settings.json` z permissions, hookami i pluginami
-- ✅ **Strukturę dla spec-driven development** — folder `specs/` z 3 templates
-- ✅ **Komplet dokumentacji kursowej** — 2 obszerne instrukcje + przewodnik konfiguracji w `docs/`
+Co dostajesz:
+
+- ✅ **Skonfigurowany Claude Code** — `CLAUDE.md` z kontekstem mentora, `.claude/settings.json` z permissions, 6 hookami i 7 pluginami, plus shadcn/ui skill w `.claude/skills/`
+- ✅ **Gotowy szkielet Next.js 16** — TypeScript strict, Tailwind CSS v4, shadcn/ui zainicjalizowane (`components.json`, style New York, base Slate)
+- ✅ **Strukturę dla spec-driven development** — folder `specs/` z 3 templates (feature, change, experiment)
+- ✅ **Komplet dokumentacji kursowej** — 2 obszerne instrukcje (~62 strony) w `docs/`
 - ✅ **`.gitignore` i `.env.example`** — gotowe do pracy z Supabase
-- ✅ **Brak rzeczywistego kodu Next.js** — to świadome: kod tworzysz Ty z Claude Code
+
+> **Filozofia paczki:** dokumenty w `docs/` to **niezależna referencja wiedzy** opisująca proces tworzenia środowiska od zera. Ta paczka **nie zależy** od dokumentów — wszystko już jest skonfigurowane. Czytaj `docs/` gdy chcesz zrozumieć **dlaczego** coś jest tak ustawione.
 
 ---
 
@@ -97,21 +101,33 @@ claude
 Przy pierwszym uruchomieniu Claude Code zapyta:
 
 1. *"Trust this folder?"* → **yes** (ufamy konfiguracji w `.claude/`)
-2. *"Install plugins: figma, supabase, vercel, github, frontend-design?"* → **yes**
+2. *"Install plugins: figma, supabase, vercel, github, frontend-design, context7, chrome-devtools?"* → **yes**
 
-Po kilku sekundach masz kompletnie skonfigurowane środowisko z 5 pluginami i wszystkimi hookami aktywnymi.
+Po kilku sekundach masz kompletnie skonfigurowane środowisko z 7 pluginami, hookami i shadcn/ui skill aktywnymi.
 
-### Krok 6: Stwórz właściwy projekt Next.js
+### Krok 6: Zainstaluj zależności i uruchom projekt
 
-W aktywnej sesji Claude Code:
+Paczka zawiera **gotowy szkielet Next.js 16 + Tailwind v4 + shadcn**. Wystarczy:
 
+```bash
+# Zainstaluj zależności
+npm install
+
+# Uruchom dev server
+npm run dev
 ```
-> Stwórz w tym folderze projekt Next.js 15 (App Router) + TypeScript +
-  Tailwind + shadcn/ui zgodnie z konwencjami w @CLAUDE.md.
-  Po skończeniu uruchom dev server i pokaż link.
-```
 
-Claude wykona setup, doda 4 podstawowe komponenty shadcn (button, card, input, label), uruchomi serwer.
+Otwórz `http://localhost:3000` w przeglądarce — zobaczysz domyślną stronę gotową do edycji.
+
+> **Co już jest skonfigurowane:**
+> - ✅ Next.js 16 (App Router, Turbopack default, React 19)
+> - ✅ TypeScript w trybie strict
+> - ✅ Tailwind CSS v4 + shadcn/ui (style: New York, base: Slate, CSS variables OKLCH)
+> - ✅ ESLint 9 z natywnym flat config (`eslint.config.mjs`) — `npm run lint` używa `eslint .` (w Next.js 16 `next lint` został usunięty)
+> - ✅ Pusty folder `src/components/ui/` — dodawaj komponenty przez `npx shadcn@latest add [nazwa]`
+> - ✅ shadcn skill w `.claude/skills/` — Claude wie jak korzystać z shadcn/ui w tym projekcie
+
+> **Uwaga o wersjach:** dokumenty w `docs/` zostały napisane dla Next.js 15. Paczka używa już **Next.js 16.2.4** — koncepcyjnie to ta sama architektura (App Router, Server Components, RSC), więc lekcje z docs nadal są aktualne. Drobne różnice (np. `next lint` → `eslint .`, `--turbopack` jest defaultem) są obsłużone przez samą paczkę.
 
 ### Krok 7: Wybierz swoją ścieżkę startu
 
@@ -156,7 +172,7 @@ Po pierwszym działającym fragmencie kodu:
 
 ```bash
 git add .
-git commit -m "Initial Next.js scaffolding"
+git commit -m "First prototype changes"
 git push
 ```
 
@@ -173,7 +189,20 @@ fashionhero-moj-prototyp/
 │                                  (kontekst projektu + konwencje + mentor mode)
 │
 ├── .claude/
-│   └── settings.json            ← permissions + hooki + plugins
+│   ├── settings.json            ← permissions + hooki + plugins
+│   └── skills/
+│       └── shadcn-ui/
+│           └── SKILL.md         ← shadcn/ui skill (auto-loaded gdy istnieje components.json)
+│
+├── src/                         ← kod aplikacji
+│   ├── app/                     ← Next.js App Router
+│   │   ├── layout.tsx           ← root layout (font Geist, html/body)
+│   │   ├── page.tsx             ← strona startowa (do edycji)
+│   │   └── globals.css          ← Tailwind v4 + shadcn CSS variables (OKLCH)
+│   ├── components/
+│   │   └── ui/                  ← shadcn components (pusty — dodawaj przez `npx shadcn add`)
+│   └── lib/
+│       └── utils.ts             ← `cn()` helper dla shadcn
 │
 ├── specs/                       ← spec-driven development (Część 14 instrukcji)
 │   ├── README.md                ← jak używać tego folderu
@@ -188,8 +217,17 @@ fashionhero-moj-prototyp/
 │   ├── 02-claude-code-dla-projektantow-ux.docx  ← główny przewodnik (15 części)
 │   └── 02-claude-code-dla-projektantow-ux.md    ← (markdown wersja)
 │
+├── public/                      ← statyczne pliki (obrazy, fonty, favicon)
+│
 ├── .env.example                 ← szablon zmiennych Supabase (skopiuj jako .env.local)
 ├── .gitignore                   ← Next.js + Supabase + Claude Code worktrees
+├── components.json              ← konfiguracja shadcn/ui (style: New York, base: Slate)
+├── eslint.config.mjs            ← ESLint 9 (flat config) z next/typescript
+├── next.config.ts               ← konfiguracja Next.js
+├── next-env.d.ts                ← typy Next.js (auto-generowany)
+├── package.json                 ← Next.js 16 + React 19 + Tailwind v4 + shadcn deps
+├── postcss.config.mjs           ← PostCSS plugin dla Tailwind v4
+├── tsconfig.json                ← TypeScript w trybie strict + alias @/*
 └── README.md                    ← ten plik
 ```
 
@@ -223,9 +261,11 @@ Dokumentacja **konkretnej zawartości** `.claude/settings.json` w tej paczce —
 
 ## Najczęstsze pytania na start
 
-### "Czemu na początku nie ma kodu Next.js?"
+### "Czemu paczka zawiera już szkielet Next.js? Myślałem że zrobię to sam."
 
-To świadome — **proces tworzenia jest lekcją**. Gdyby paczka miała preinstalowany Next.js, ominąłbyś pierwszą wartość Claude Code: zlecasz mu setup, obserwujesz co robi, dyskutujesz wybory. To dokładnie ten workflow, którego się uczysz.
+To świadoma decyzja: paczka jest **samobieżna**. Po `npm install` masz działający projekt — bez `npx create-next-app`, bez ręcznej konfiguracji shadcn. Twoja praca zaczyna się od **pierwszego sensownego promptu**, nie od setup'u środowiska.
+
+Folder `src/components/ui/` jest **celowo pusty** — komponenty shadcn dodajesz w miarę potrzeb przez `npx shadcn@latest add [nazwa]`. Dzięki temu nie masz w projekcie 60 niepotrzebnych komponentów.
 
 ### "Po co `CLAUDE.md` skoro już mam wszystko w głowie?"
 
@@ -310,7 +350,7 @@ Jeśli któryś hook Cię irytuje, usuń odpowiednią sekcję z `hooks` w `setti
 
 ### Pluginy — `enabledPlugins`
 
-Sekcja `enabledPlugins` w `settings.json` deklaruje 5 pluginów aktywowanych automatycznie:
+Sekcja `enabledPlugins` w `settings.json` deklaruje 7 pluginów aktywowanych automatycznie:
 
 | Plugin | Po co |
 |---|---|
@@ -319,13 +359,17 @@ Sekcja `enabledPlugins` w `settings.json` deklaruje 5 pluginów aktywowanych aut
 | **vercel** | Deployment, environment variables, preview URL-e |
 | **github** | Tworzenie PR-ów, review, issues |
 | **frontend-design** | Generowanie komponentów React/Tailwind w spójnym stylu (skill Anthropic) |
+| **context7** | Aktualne dokumentacje bibliotek (Next.js 16, React 19, Tailwind v4, Supabase) — eliminuje hallucynacje API |
+| **chrome-devtools** | Automatyzacja przeglądarki, screenshots, performance traces, console errors |
 
 Format: `"plugin-name@marketplace-name": true`. Możesz tymczasowo wyłączyć plugin zmieniając `true` na `false` (zostaje zainstalowany, ale nieaktywny).
+
+> **Plus:** w `.claude/skills/shadcn-ui/` znajduje się **shadcn/ui skill** — uruchamia się automatycznie gdy Claude widzi `components.json` w projekcie. Daje Claude'owi project-aware wiedzę o tym jak dodawać komponenty (`Field`/`FieldGroup` dla formularzy, `ToggleGroup`, semantic colors, Tailwind v4 patterns).
 
 #### Co się dzieje przy pierwszym uruchomieniu
 
 1. *"Trust this folder?"* → **yes** (ufamy konfiguracji w `.claude/`)
-2. *"Install plugins: figma, supabase, vercel, github, frontend-design?"* → **yes**
+2. *"Install plugins: figma, supabase, vercel, github, frontend-design, context7, chrome-devtools?"* → **yes**
 3. Po akceptacji — wszystkie pluginy zainstalowane bez ręcznego `/plugin install`
 
 #### Modyfikacje pluginów

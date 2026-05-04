@@ -49,7 +49,7 @@ The FashionHero website is **part of course infrastructure** — a prepared site
 
 ## Tech stack
 
-- **Framework:** Next.js 15 (App Router) + TypeScript (strict mode)
+- **Framework:** Next.js 16 (App Router) + TypeScript (strict mode)
 - **Styling:** Tailwind CSS + shadcn/ui (CLI v4, style: New York, base color: Slate, CSS variables: Yes)
 - **Database:** Supabase (PostgreSQL + Auth + Storage)
 - **Hosting:** Vercel (personal preview deployments)
@@ -58,6 +58,67 @@ The FashionHero website is **part of course infrastructure** — a prepared site
 - **Package manager:** npm
 
 > If the designer asks "can I use [other tool]?" → explain the trade-off, but **gently steer toward this stack** for consistency. Once they have one project working end-to-end, they can experiment.
+
+---
+
+## When to use which plugin/skill
+
+This project loads several plugins and skills automatically. Pick the right tool for the right task — don't reinvent.
+
+### Library docs questions → use **context7**
+
+When the user asks about a specific library version, API, or recent feature (Next.js 16, React 19, Tailwind v4, Supabase JS client, etc.) — call context7 before answering from memory. Training data may be stale; library APIs evolve fast in 2026.
+
+Trigger phrase: just include `use context7` in the user-facing summary, or call the `query-docs` tool directly.
+
+```
+Designer: "How do I set up Next.js 16 middleware?"
+→ Use context7 with library /vercel/next.js, topic "middleware"
+```
+
+### Generating shadcn/ui components → trust the **shadcn skill**
+
+The shadcn skill in `.claude/skills/shadcn-ui/SKILL.md` activates automatically because `components.json` exists in this project. When adding UI components, follow its conventions:
+
+- Use `npx shadcn@latest add [name]` — never copy-paste from docs
+- Use `Field` + `FieldGroup` for forms (not custom `<div>` wrappers)
+- Use `ToggleGroup` for mutually exclusive options (not multiple `Button`s)
+- Use semantic color tokens (`bg-primary`, `text-foreground`) — never hard-coded hex
+
+### Browser testing / inspecting prototype → use **chrome-devtools**
+
+For tasks involving:
+- Inspecting how the prototype renders in real browser
+- Running performance traces
+- Reading console errors during development
+- Automating clicks, screenshots, or form fills for verification
+
+Don't reach for browser automation unless the designer explicitly wants visual verification — for most design tasks, reading the source is faster.
+
+### Frontend design / general UI patterns → use **frontend-design** skill
+
+The `frontend-design` plugin (Anthropic-curated) provides general UI/UX reasoning that complements shadcn. Use it for:
+- Layout decisions (when shadcn-skill is silent on layout)
+- Color/typography ratios
+- Accessibility patterns beyond what shadcn enforces
+
+For shadcn-specific composition rules, prefer the shadcn skill.
+
+### Working with Figma designs → use the **figma** plugin
+
+When the designer pastes a Figma link or asks to convert a design to code, the figma plugin handles fetching the design context. Don't try to recreate from screenshots if Figma is available.
+
+### Database work → use the **supabase** plugin
+
+Migrations, RLS policies, type generation, querying tables. The supabase plugin handles auth state and connection — don't construct raw `psql` commands.
+
+### Git / PRs / issues → use the **github** plugin
+
+Creating PRs with proper descriptions, requesting reviews, managing issues. The plugin handles the GitHub API surface — no need to script `gh` commands by hand.
+
+### Deployment → use the **vercel** plugin
+
+Setting environment variables, triggering deployments, checking deploy logs. For most prototypes a single `git push` to main triggers a Vercel deploy automatically — but the plugin helps when you need to inspect or modify deployment config.
 
 ---
 
@@ -100,7 +161,7 @@ These conventions exist for two reasons: (1) they reflect mainstream practice in
 - **Mutations (form submit, actions) → Next.js Server Actions** (`"use server"`). Don't write custom API routes for CRUD.
 - **Auth:** use `supabase.auth.getUser()` in Server Components
 
-> **Teaching note:** Server Components vs Client Components is the #1 conceptual hurdle for designers learning Next.js 15. **Whenever you create a component, briefly note which type it is and why.** A one-liner like `// Server Component — runs on the server, can read DB directly` saves hours of confusion later.
+> **Teaching note:** Server Components vs Client Components is the #1 conceptual hurdle for designers learning Next.js 16. **Whenever you create a component, briefly note which type it is and why.** A one-liner like `// Server Component — runs on the server, can read DB directly` saves hours of confusion later.
 
 ### Comments
 
