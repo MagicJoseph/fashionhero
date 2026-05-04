@@ -192,32 +192,29 @@ fashionhero-moj-prototyp/
 
 ---
 
-## Mapa drogowa nauki
+## Mapa materiałów
 
-Pełna ścieżka rozpisana w `docs/02-claude-code-dla-projektantow-ux.md` (Podsumowanie). Tu wersja jednoekranowa:
+### 1. Setup środowiska — `docs/01-setup-terminala-dla-ux.md`
 
-### Tydzień 1-2: Fundamenty CLI
-- Zainstaluj 5 pluginów (auto przez `enabledPlugins`)
-- Skonfiguruj swój pierwszy `CLAUDE.md` (już masz szablon)
-- Pierwsze 5 promptów → 5 commitów → 5 lekcji
-- **Środowisko: Claude Code CLI**
+Instalacja niezbędnych narzędzi: Node.js, Git, GitHub CLI, Vercel CLI, Supabase CLI, Claude Code, jq. **Zacznij tu, jeśli nie masz jeszcze zainstalowanego środowiska developerskiego.**
 
-### Tydzień 3-4: Pierwsze realne komponenty
-- Stwórz pierwszy własny skill (`prompt-builder` — Część 5 instrukcji)
-- Zaimplementuj swoją pierwszą rekomendację (z Claude.ai) lub fragment scrapowanej strony
-- Pierwszy spec-driven feature (Część 14)
-- **Środowisko: przerzuć się na Claude Code Desktop** (Część 15)
+### 2. Główny przewodnik — `docs/02-claude-code-dla-projektantow-ux.md`
 
-### Tydzień 5-8: Workflow end-to-end
-- Pierwszy projekt zdeployowany na Vercel z domeną
-- Kompletna baza Supabase z RLS (Część 9)
-- Pierwsze code review zrobione przez Claude'a (Część 11)
-- 3-5 własnych skilli + szablonów promptów
+15 części, ~44 strony. Dokument do czytania **punktowo** — nie linearnie. Sięgaj po konkretną Część gdy potrzebujesz danej informacji:
 
-### Po 90 dniach
-- `CLAUDE.md` projektu rozrasta się do 100+ linii
-- Plan mode i auto-accept używasz świadomie
-- Możesz prowadzić cały projekt: discovery → projekt → kod → deploy → iteracja
+| Grupa | Części | O czym |
+|---|---|---|
+| **Podstawy** | 1-4 | Jak działa Claude Code, struktura katalogów, permissions, pluginy |
+| **Workflow** | 5-8 | Skille, scraping istniejących stron, Figma → kod, prompt engineering |
+| **Integracje** | 9-11 | Supabase (baza + RLS), Vercel (deployment), GitHub (PR-y, code review) |
+| **Best practices** | 12-13 | Czego nie robić + najczęstsze problemy i rozwiązania |
+| **Zaawansowane** | 14-15 | Spec-driven development + wybór środowiska (CLI / Desktop / IDE) |
+
+**Spis treści** znajdziesz na początku dokumentu, **Podsumowanie z sugerowaną ścieżką nauki** na końcu.
+
+### 3. Konfiguracja paczki — sekcja "Konfiguracja w szczegółach" w tym README
+
+Dokumentacja **konkretnej zawartości** `.claude/settings.json` w tej paczce — co robi każdy z 6 hooków, lista 5 polecanych pluginów, jak modyfikować permissions. Czytaj wtedy, gdy chcesz coś zmienić w configu lub gdy coś nie działa jak oczekujesz.
 
 ---
 
@@ -399,11 +396,9 @@ Pokaże listę aktywnych hooków z liczbą uruchomień. Jeśli widzisz `PreToolU
 
 ## Pomoc i kontakt
 
-- **Pełny przewodnik kursowy:** `docs/02-claude-code-dla-projektantow-ux.docx` (15 części, ~44 strony)
-- **Spec-driven workflow:** Część 14 głównego przewodnika
-- **Trzy środowiska Claude Code:** Część 15 głównego przewodnika
-
 W razie problemów — najpierw uruchom Claude Code w projekcie i opisz problem. Claude ma kontekst całego projektu (przez `CLAUDE.md`) i konfiguracji (przez `settings.json`), więc 90% problemów rozwiązuje sam.
+
+Jeśli Claude nie pomaga — zajrzyj do **Mapy materiałów** powyżej i znajdź odpowiednią Część przewodnika.
 
 ---
 
