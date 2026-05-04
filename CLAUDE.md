@@ -299,5 +299,19 @@ This is **mandatory** in the learning context — the designer's confidence depe
 
 ---
 
+## Verification pattern dla seed data z relacyjnymi mockami
+
+Gdy seed data zawiera referencje do mock entities (np. `seller_id`, `product_slug` do mocków w `src/lib/data.ts`), weryfikuj TRZY warstwy zanim apply:
+
+1. Czy każdy referenced ID istnieje w mockach (existence check)
+2. Czy każdy second-level ID istnieje w mockach (existence check)
+3. Czy KOMBINACJA referenced ID + second-level ID jest sensowna w mockach (relationship integrity check)
+
+Bez (3): możliwy "cichy" data integrity bug — migracja przejdzie, dane będą w bazie, ale relacje będą niespójne z mockami. Frontend pokaże np. reklamy nieprawidłowych sprzedawców.
+
+Pattern dotyczy każdego seedu, w którym kolumny tekstowe (bez FK-ów) reprezentują logiczne klucze obce do mocków. Po migracji `sellers`/`products` do bazy z prawdziwymi FK-ami ten check przejmuje silnik bazy — do tego czasu robimy go ręcznie.
+
+---
+
 **Version:** 1.0 (April 2026, AI Product Heroes course)
 **Update** this file as the designer's level grows — early on, it should be very explanatory; later, conventions can be tighter and explanations briefer. The file should evolve with the learner.
