@@ -183,8 +183,7 @@ fashionhero-moj-prototyp/
 │   ├── 01-setup-terminala-dla-ux.docx     ← przewodnik instalacji środowiska
 │   ├── 01-setup-terminala-dla-ux.md       ← (markdown wersja)
 │   ├── 02-claude-code-dla-projektantow-ux.docx  ← główny przewodnik (15 części)
-│   ├── 02-claude-code-dla-projektantow-ux.md    ← (markdown wersja)
-│   └── 03-konfiguracja-claude-code.md     ← dokumentacja .claude/settings.json
+│   └── 02-claude-code-dla-projektantow-ux.md    ← (markdown wersja)
 │
 ├── .env.example                 ← szablon zmiennych Supabase (skopiuj jako .env.local)
 ├── .gitignore                   ← Next.js + Supabase + Claude Code worktrees
@@ -234,7 +233,7 @@ To świadome — **proces tworzenia jest lekcją**. Gdyby paczka miała preinsta
 
 ### "Czy hooki w `settings.json` na pewno mi nie zepsują projektu?"
 
-Hooki są **konserwatywne i auto-tolerujące błędy**. Każdy hook kończy się `|| true` — jeśli np. nie masz Prettiera, hook nie wybucha, po prostu nic nie robi. Pełna lista co który hook robi: `docs/03-konfiguracja-claude-code.md`.
+Hooki są **konserwatywne i auto-tolerujące błędy**. Każdy hook kończy się `|| true` — jeśli np. nie masz Prettiera, hook nie wybucha, po prostu nic nie robi. Pełna lista co który hook robi znajdziesz w sekcji **"Konfiguracja w szczegółach"** poniżej.
 
 ### "Skąd wezmę realne dane Supabase?"
 
@@ -254,14 +253,157 @@ Możesz, ale nie polecam — `docs/` to Twoja oficjalna kursowa dokumentacja, kt
 
 ---
 
+## Konfiguracja w szczegółach
+
+Ta sekcja tłumaczy **dokładnie co znajduje się w `.claude/settings.json`** Twojej paczki — hooki, pluginy, permissions. Czytaj wtedy gdy chcesz coś zmodyfikować lub gdy coś nie działa jak oczekujesz.
+
+> **Wymagane narzędzie dla hooków:** `jq` — JSON processor.
+> Instalacja: `brew install jq` (macOS) lub `sudo apt install jq` (Linux/WSL).
+> Bez niego hooki nie wybuchają, ale po prostu nic nie robią (`|| true` na końcu).
+
+### Hooki — 6 automatyzacji w `settings.json`
+
+#### 🔒 PreToolUse — Blokada `git add .env*`
+
+Zatrzymuje próbę dodania pliku `.env`, `.env.local`, `.env.production` do gita.
+
+**Dlaczego ważny:** `.env.local` zawiera klucze do Twojej piaskownicy Supabase. Nawyk niewrzucania sekretów do gita to jeden z najważniejszych nawyków programisty. Po wycieku do publicznego repo sekret jest tam na zawsze (nawet po usunięciu commita — historia gita zostaje).
+
+**False positive guard:** hook rozróżnia `git add .env.local` (blokuje) od `git add config.env-template.txt` (przepuszcza), bo używa wzorca `\.env(\.local|\.production)?[[:space:]]` — pełna nazwa pliku ze spacją lub końcem stringa.
+
+#### 🔒 PreToolUse — Ochrona istniejących migracji Supabase
+
+Blokuje edycję plików w `supabase/migrations/` które **już istnieją na dysku**. Pozwala tworzyć nowe.
+
+**Dlaczego ważny:** zastosowane migracje są niezmienne — modyfikacja powoduje rozsynchronizowanie historii bazy z plikami. Hook wymusza nawyk **"poprawka = nowa migracja"**.
+
+#### ✨ PostToolUse — Auto-format Prettier po edycji
+
+Uruchamia `npx prettier --write` na każdym edytowanym pliku `.ts`, `.tsx`, `.js`, `.jsx`, `.json`, `.css`, `.md`. Brak ręcznego "Format Document" w VS Code.
+
+#### ✨ PostToolUse — Auto-fix ESLint po edycji TypeScript
+
+Uruchamia `npx eslint --fix` na edytowanych plikach `.ts`, `.tsx`. ESLint łapie typowe błędy (unused vars, missing imports, react-hooks rules), `--fix` automatycznie naprawia te które potrafi.
+
+#### 📍 SessionStart — Wstrzyknięcie kontekstu git
+
+Przy każdym uruchomieniu sesji Claude Code automatycznie informuje Claude'a o aktualnym branchu git i pierwszych 5 niecommitowanych zmianach. Claude od razu wie czy jesteś na `main` (uważaj!) czy `feature/xyz`.
+
+#### 🔔 Notification — Desktop notification (macOS)
+
+Gdy Claude potrzebuje Twojej uwagi (pyta o zgodę, ukończył dłuższe zadanie) — pojawia się natywne powiadomienie macOS z dźwiękiem.
+
+**Tylko macOS:** używa `osascript`. Na Linuxie zamień na `notify-send`, na Windows usuń.
+
+### Hooki świadomie pominięte
+
+Te są popularne, ale dla początkującego = over-engineering:
+
+- **`Stop` + `npm test`** — wymaga skonfigurowanego test suite (UX-owiec na początku nie pisze testów)
+- **`SessionStart` + `gh issue list`** — wymaga setupu GitHub i issue trackingu
+- **`PreToolUse` blokujący `DROP TABLE`** — `supabase db reset` jest już w `permissions.deny`
+- **`PostToolUse` z `git add` po każdej edycji** — auto-stage = ryzyko commitu czegoś niezamierzonego
+
+### Jak wyłączyć hooki
+
+Jeśli któryś hook Cię irytuje, usuń odpowiednią sekcję z `hooks` w `settings.json`. Lub uruchom Claude Code z flagą `--no-hooks`.
+
+### Pluginy — `enabledPlugins`
+
+Sekcja `enabledPlugins` w `settings.json` deklaruje 5 pluginów aktywowanych automatycznie:
+
+| Plugin | Po co |
+|---|---|
+| **figma** | Czytanie makiet z Figmy, generowanie kodu z designów |
+| **supabase** | Praca z bazą, migracje, typy TypeScript |
+| **vercel** | Deployment, environment variables, preview URL-e |
+| **github** | Tworzenie PR-ów, review, issues |
+| **frontend-design** | Generowanie komponentów React/Tailwind w spójnym stylu (skill Anthropic) |
+
+Format: `"plugin-name@marketplace-name": true`. Możesz tymczasowo wyłączyć plugin zmieniając `true` na `false` (zostaje zainstalowany, ale nieaktywny).
+
+#### Co się dzieje przy pierwszym uruchomieniu
+
+1. *"Trust this folder?"* → **yes** (ufamy konfiguracji w `.claude/`)
+2. *"Install plugins: figma, supabase, vercel, github, frontend-design?"* → **yes**
+3. Po akceptacji — wszystkie pluginy zainstalowane bez ręcznego `/plugin install`
+
+#### Modyfikacje pluginów
+
+**Dodanie nowego pluginu z oficjalnego marketplace:**
+
+```json
+"enabledPlugins": {
+  ...istniejące...,
+  "playwright@claude-plugins-official": true
+}
+```
+
+Po zmianie — restart Claude Code (`/exit` + `claude`) → monit instalacji pojawi się sam.
+
+**Usunięcie pluginu na stałe:** w sesji Claude Code → `/plugin uninstall figma@claude-plugins-official` + usuń wpis z `enabledPlugins`.
+
+#### ⚠️ Bezpieczeństwo pluginów
+
+**Pluginy wykonują kod na komputerze z Twoimi uprawnieniami.** Konsekwencje:
+
+- ✅ Marketplace `claude-plugins-official` jest **kuratorowany przez Anthropic** — bezpieczny
+- ❌ **Nie dodawajcie losowych marketplace'ów z internetu** — to dosłownie odpowiednik `curl https://random.url | sh`
+
+Reguła kciuka: *"Czy zaufał(a)bym tej osobie/organizacji żeby wykonała kod na moim komputerze? Jeśli nie — nie dodawaj jej marketplace'u."*
+
+### Permissions — co Claude może / nie może
+
+Sekcja `permissions` w `settings.json` zawiera trzy listy:
+
+- **`allow`** — czego Claude może używać **bez pytania** (Read, Edit, npm, git, supabase, vercel, gh)
+- **`deny`** — czego Claude **nigdy nie zrobi** (rm -rf, git push --force, supabase db reset, sudo, curl|sh)
+- **`ask`** — co **wymaga Twojej zgody** (rm, npm audit fix, supabase db push --force)
+
+Lista `deny` to Twoja siatka bezpieczeństwa — **nie ruszaj** chyba że dokładnie wiesz co robisz.
+
+Możesz **rozszerzać `allow`** jeśli widzisz że Claude pyta o coś co robisz codziennie:
+
+```json
+"allow": [
+  ...
+  "Bash(docker:*)",        // jeśli używasz Docker
+  "Bash(pnpm:*)",          // jeśli używasz pnpm zamiast npm
+]
+```
+
+### Weryfikacja że konfiguracja działa
+
+Po pierwszym uruchomieniu sesji:
+
+```
+> /plugin
+```
+
+Pokaże 4 zakładki: Discover / **Installed** / Marketplaces / Errors. W "Installed" powinieneś zobaczyć całą piątkę z `enabledPlugins`.
+
+```
+> /hooks
+```
+
+Pokaże listę aktywnych hooków z liczbą uruchomień. Jeśli widzisz `PreToolUse: 2 hooks, 0 fired` — hooki są wczytane ale jeszcze się nie odpaliły.
+
+### Adaptacja do Linux / Windows
+
+| Element | macOS | Linux | Windows (WSL) |
+|---|---|---|---|
+| Notification hook | `osascript` (działa) | Zamień na `notify-send "Claude" "msg"` | Usuń lub zamień na PowerShell |
+| jq, grep, sed | Działa | Działa | Działa w WSL |
+
+---
+
 ## Pomoc i kontakt
 
 - **Pełny przewodnik kursowy:** `docs/02-claude-code-dla-projektantow-ux.docx` (15 części, ~44 strony)
-- **Konfiguracja krok po kroku:** `docs/03-konfiguracja-claude-code.md`
 - **Spec-driven workflow:** Część 14 głównego przewodnika
 - **Trzy środowiska Claude Code:** Część 15 głównego przewodnika
 
-W razie problemów — kursant powinien najpierw uruchomić Claude Code w projekcie i opisać problem. Claude ma kontekst całego projektu (przez `CLAUDE.md`) i konfiguracji (przez `settings.json`), więc 90% problemów rozwiązuje sam.
+W razie problemów — najpierw uruchom Claude Code w projekcie i opisz problem. Claude ma kontekst całego projektu (przez `CLAUDE.md`) i konfiguracji (przez `settings.json`), więc 90% problemów rozwiązuje sam.
 
 ---
 
