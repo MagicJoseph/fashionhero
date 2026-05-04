@@ -19,7 +19,7 @@ export function CartDrawer({ open, onClose }: { open: boolean; onClose: () => vo
           </div>
         </div>
         <div className="px-4 py-3 bg-[#f5f4f1] text-center text-xs text-muted-foreground border-t">
-          Spend 299 zł more to earn free shipping!
+          Spend 299 zl more to earn free shipping!
         </div>
         <div className="px-4 py-4">
           <Button className="w-full bg-[#212121] text-white hover:bg-[#333] rounded-none h-12 text-sm tracking-wider">

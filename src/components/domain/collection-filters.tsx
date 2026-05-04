@@ -82,8 +82,8 @@ export function CollectionFilters({
                 className="mb-2"
               />
               <div className="flex justify-between text-xs text-muted-foreground">
-                <span>0 zł</span>
-                <span>{maxPrice} zł</span>
+                <span>0 zl</span>
+                <span>{maxPrice} zl</span>
               </div>
             </div>
           </AccordionContent>

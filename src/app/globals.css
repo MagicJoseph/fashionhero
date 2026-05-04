@@ -29,6 +29,7 @@
   --footer-bg: #333333;
   --cream-light: #f5f4f1;
   --charcoal: #212121;
+  --warm-gray: #6b6b6b;
 }
 
 @theme inline {
@@ -57,6 +58,7 @@
   --color-footer-bg: var(--footer-bg);
   --color-cream-light: var(--cream-light);
   --color-charcoal: var(--charcoal);
+  --color-warm-gray: var(--warm-gray);
   --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }

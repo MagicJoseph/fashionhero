@@ -1,3 +1,5 @@
+import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProductsByCollection, collectionMeta } from "@/lib/data";
 import { CollectionView } from "@/components/domain/collection-view";
@@ -26,11 +28,35 @@ export default async function CollectionPage({ params }: Props) {
 
   return (
     <>
-      <div className="px-4 md:px-8 lg:px-12 pt-8 pb-2">
-        <nav className="text-xs text-muted-foreground mb-3">
-          <span>Home</span> / <span>{meta.title}</span>
+      {/* Hero banner with title overlay */}
+      {meta.heroImage && (
+        <section
+          className="relative w-full overflow-hidden"
+          style={{ height: 280 }}
+        >
+          <Image
+            src={meta.heroImage}
+            alt={meta.title}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-black/40" />
+          <div className="relative z-10 h-full flex items-center justify-center text-center text-white px-6">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-normal tracking-wide">
+              {meta.title}
+            </h1>
+          </div>
+        </section>
+      )}
+
+      <div className="px-4 md:px-8 lg:px-12 pt-6 pb-2">
+        <nav className="text-[11px] text-warm-gray mb-2">
+          <Link href="/" className="hover:text-charcoal">Home</Link>
+          <span className="mx-1">/</span>
+          <span>{meta.title}</span>
         </nav>
-        <h1 className="text-3xl font-bold">{meta.title}</h1>
       </div>
       <CollectionView products={products} />
     </>

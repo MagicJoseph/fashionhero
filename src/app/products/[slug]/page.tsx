@@ -21,6 +21,16 @@ export function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
 }
 
+function deliveryWindow(): string {
+  const start = new Date();
+  start.setDate(start.getDate() + 5);
+  const end = new Date(start);
+  end.setDate(end.getDate() + 2);
+  const fmt = (d: Date) =>
+    d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  return `${fmt(start)} - ${fmt(end)}`;
+}
+
 // Server Component
 export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
@@ -29,25 +39,36 @@ export default async function ProductPage({ params }: Props) {
 
   const related = products
     .filter((p) => p.slug !== slug && p.gender === product.gender)
-    .slice(0, 8);
+    .slice(0, 5);
+
+  const breadcrumb =
+    product.gender === "womens" ? "Women's Fashion" : "Men's Fashion";
+  const breadcrumbHref =
+    product.gender === "womens" ? "/collections/womens" : "/collections/mens";
+  const sizesLabel =
+    product.gender === "womens" ? "WOMEN'S SIZES" : "MEN'S SIZES";
+
+  const galleryImages = product.images ?? [product.image];
 
   return (
     <>
       <div className="px-4 md:px-8 lg:px-12 pt-6">
-        <nav className="text-xs text-muted-foreground mb-6">
-          <Link href="/">Home</Link> /{" "}
-          <Link href={`/collections/${product.gender === "womens" ? "womens" : "mens"}`}>
-            {product.gender === "womens" ? "Women's Shoes" : "Men's Shoes"}
-          </Link>{" "}
-          / <span>{product.name}</span>
+        <nav className="text-[11px] text-warm-gray mb-6">
+          <Link href="/" className="hover:text-charcoal">Home</Link>
+          <span className="mx-1">/</span>
+          <Link href={breadcrumbHref} className="hover:text-charcoal">
+            {breadcrumb}
+          </Link>
+          <span className="mx-1">/</span>
+          <span className="text-charcoal/60">{product.name}</span>
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16">
-          {/* Images */}
-          <div className="grid grid-cols-2 gap-2">
-            <div className="col-span-2 relative aspect-square bg-[#f5f4f1]">
+          {/* Image gallery: large + 3 thumbnails */}
+          <div>
+            <div className="relative aspect-square bg-secondary mb-2">
               <Image
-                src={product.image}
+                src={galleryImages[0]}
                 alt={product.name}
                 fill
                 className="object-cover"
@@ -55,67 +76,91 @@ export default async function ProductPage({ params }: Props) {
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
-            {(product.images ?? [product.image, product.image]).slice(1, 3).map((img, i) => (
-              <div key={i} className="relative aspect-square bg-[#f5f4f1]">
-                <Image src={img} alt={`${product.name} view ${i + 2}`} fill className="object-cover" sizes="25vw" />
+            {galleryImages.length > 1 && (
+              <div className="grid grid-cols-3 gap-2">
+                {galleryImages.slice(1, 4).map((img, i) => (
+                  <div key={i} className="relative aspect-square bg-secondary">
+                    <Image
+                      src={img}
+                      alt={`${product.name} view ${i + 2}`}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 1024px) 33vw, 16vw"
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
           </div>
 
           {/* Details */}
           <div>
-            <p className="text-xs text-muted-foreground mb-1">
-              Sold by {product.seller}
+            <h1 className="text-3xl font-normal text-charcoal mb-1">
+              {product.name}
+            </h1>
+            <p className="text-[11px] text-warm-gray mb-3">
+              Sold by{" "}
+              <span className="text-charcoal/70">{product.seller}</span>
               {product.sellerTier === "Pro" && (
-                <span className="ml-1 text-[10px] font-semibold text-amber-600">Pro</span>
+                <span className="inline-block ml-1 text-[9px] bg-charcoal/10 text-charcoal/70 px-1 py-0.5 rounded uppercase tracking-wide">
+                  Pro
+                </span>
               )}
             </p>
-            <h1 className="text-2xl font-bold mb-1">{product.name}</h1>
 
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-4">
               <div className="flex">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
                     key={i}
-                    className={`w-3.5 h-3.5 ${i < Math.floor(product.rating) ? "fill-[#212121] text-[#212121]" : "text-border"}`}
+                    className={`w-3.5 h-3.5 ${
+                      i < Math.floor(product.rating)
+                        ? "fill-charcoal text-charcoal"
+                        : "text-border"
+                    }`}
                   />
                 ))}
               </div>
-              <span className="text-xs text-muted-foreground">({product.reviews})</span>
+              <span className="text-xs text-warm-gray">({product.reviews})</span>
             </div>
 
-            <p className="text-xl font-semibold mb-1">{product.price} zł</p>
+            <p className="text-xl font-medium mb-2">{product.price} zl</p>
             {product.inStock ? (
-              <p className="text-xs text-green-700 mb-4">In Stock — Ready to Ship</p>
+              <p className="text-xs text-green-700 mb-5">
+                In Stock — Ready to Ship
+              </p>
             ) : (
-              <p className="text-xs text-red-600 mb-4">Out of Stock</p>
+              <p className="text-xs text-red-600 mb-5">Out of Stock</p>
             )}
 
-            {/* Color */}
-            <div className="mb-4">
-              <p className="text-xs font-semibold tracking-wide mb-2">Color: {product.colors[0]?.name}</p>
+            {/* Color swatches */}
+            <div className="mb-5">
+              <p className="text-[11px] text-warm-gray mb-2">
+                {product.colors[0]?.name}
+              </p>
               <div className="flex gap-2 flex-wrap">
                 {product.colors.map((c) => (
                   <button
                     key={c.name}
                     title={c.name}
-                    className="w-7 h-7 rounded-full border-2 border-border hover:border-[#212121] transition-colors"
+                    aria-label={c.name}
+                    className="w-7 h-7 rounded-full border border-black/20 hover:border-charcoal transition-colors"
                     style={{ backgroundColor: c.hex }}
                   />
                 ))}
               </div>
             </div>
 
-            {/* Size */}
+            {/* Sizes — 4x2 grid */}
             <div className="mb-6">
-              <p className="text-xs font-semibold tracking-wide mb-2">
-                {product.gender === "womens" ? "WOMEN'S SIZES" : "MEN'S SIZES"}
+              <p className="text-[11px] font-medium uppercase tracking-wide text-charcoal mb-2">
+                {sizesLabel}
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-4 gap-2 max-w-xs">
                 {product.sizes.map((s) => (
                   <button
                     key={s}
-                    className="w-10 h-10 text-sm border border-border hover:border-[#212121] transition-colors"
+                    className="h-10 text-sm border border-border hover:border-charcoal transition-colors"
                   >
                     {s}
                   </button>
@@ -123,26 +168,54 @@ export default async function ProductPage({ params }: Props) {
               </div>
             </div>
 
-            <Button className="w-full bg-[#212121] text-white hover:bg-[#333] rounded-none h-12 text-xs font-semibold tracking-widest mb-3">
+            <Button className="w-full bg-charcoal text-white hover:bg-charcoal/90 rounded-none h-12 text-[12px] font-medium tracking-widest uppercase mb-3">
               SELECT A SIZE
             </Button>
-            <p className="text-xs text-center text-muted-foreground mb-6">
-              Free Shipping on Orders over 299 zł
-            </p>
 
-            {/* Accordion tabs */}
-            <Accordion type="multiple" defaultValue={["description"]} className="border-t">
+            <div className="text-[11px] text-warm-gray mb-6 space-y-1">
+              <p>Free Shipping on Orders over 299 zl</p>
+              <p>Estimated delivery: {deliveryWindow()}</p>
+              <p>Easy Returns</p>
+            </div>
+
+            <Accordion
+              type="multiple"
+              defaultValue={["description"]}
+              className="border-t"
+            >
               {[
-                { id: "description", label: "DESCRIPTION", content: product.description ?? "No description available." },
-                { id: "features", label: "FEATURES", content: product.features?.join("\n") ?? "—" },
-                { id: "materials", label: "MATERIALS", content: product.material ?? "—" },
-                { id: "care", label: "CARE", content: "Spot clean only. Do not machine wash." },
+                {
+                  id: "description",
+                  label: "DESCRIPTION",
+                  content: product.description ?? "—",
+                },
+                {
+                  id: "features",
+                  label: "FEATURES",
+                  content: product.features?.length
+                    ? product.features.map((f) => `• ${f}`).join("\n")
+                    : "—",
+                },
+                {
+                  id: "materials",
+                  label: "MATERIALS",
+                  content: product.materials ?? product.material ?? "—",
+                },
+                {
+                  id: "care",
+                  label: "CARE",
+                  content: product.care ?? "—",
+                },
               ].map((tab) => (
-                <AccordionItem key={tab.id} value={tab.id} className="border-b">
-                  <AccordionTrigger className="text-xs font-semibold tracking-widest py-4">
+                <AccordionItem
+                  key={tab.id}
+                  value={tab.id}
+                  className="border-b"
+                >
+                  <AccordionTrigger className="text-[11px] font-medium uppercase tracking-widest py-4">
                     {tab.label}
                   </AccordionTrigger>
-                  <AccordionContent className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line pb-4">
+                  <AccordionContent className="text-sm text-warm-gray leading-relaxed whitespace-pre-line pb-4">
                     {tab.content}
                   </AccordionContent>
                 </AccordionItem>
@@ -152,11 +225,13 @@ export default async function ProductPage({ params }: Props) {
         </div>
       </div>
 
-      {/* You May Also Like */}
+      {/* You May Also Like — 5-up grid */}
       {related.length > 0 && (
         <section className="px-4 md:px-8 lg:px-12 pb-16">
-          <h2 className="text-xl font-semibold mb-6">You May Also Like</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <h2 className="text-xl font-normal text-charcoal mb-6">
+            You May Also Like
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
             {related.map((p) => (
               <ProductCardGrid key={p.slug} product={p} />
             ))}
