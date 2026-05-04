@@ -479,7 +479,8 @@ Lista zoptymalizowana pod **Twój** workflow: makiety → kod → baza → deplo
 
 | Plugin | Po co |
 |---|---|
-| **playwright** | Automatyczne testy UI — Claude może sam testować klikając w aplikację |
+| **chrome-devtools** | Automatyzacja przeglądarki, screenshots, performance traces, console errors. Używa Puppeteer + Chrome DevTools Protocol pod spodem — działa z headless Chrome, nic nie musisz instalować ręcznie. |
+| **context7** | Aktualne dokumentacje bibliotek (Next.js, React, Tailwind, Supabase) — wstrzykiwane do kontekstu Claude'a, eliminuje halucynacje API. |
 | **commit-commands** | Konwencjonalne commit messages (`/commit`, `/release`) |
 | **code-review** | Automatyczne review przed PR-em |
 | **feature-dev** | Strukturyzowany workflow rozwoju feature'a (wymagania → impl → testy) |
@@ -489,8 +490,10 @@ Lista zoptymalizowana pod **Twój** workflow: makiety → kod → baza → deplo
 
 | Plugin | Po co |
 |---|---|
-| **firecrawl** lub **playwright** | Scraping istniejących stron (Część 6 instrukcji) |
-| **browser-tools** | Czytanie console errorów, screenshots z przeglądarki |
+| **chrome-devtools** | Najprostsza opcja: Claude otwiera headless Chrome, pobiera HTML/CSS/komponenty, robi screenshots. Idealne do scrapingu kursowego (Część 6 instrukcji). |
+| **firecrawl** | Alternatywa dla scrapingu wielu stron z API (płatne po przekroczeniu free tier). Lepsze do mass scrapingu, słabsze do precyzyjnej rekonstrukcji UI. |
+
+> **Ekstra opcja dla zaawansowanych: `Claude in Chrome` extension.** To **inne** narzędzie niż `chrome-devtools` plugin. Extension instaluje się w Twoim **rzeczywistym Chrome** (Chrome Web Store, plan Pro+) i daje Claude'owi dostęp do **Twoich zalogowanych sesji** — Gmail, Slack, Figma, Notion. Uruchamia się przez `claude --chrome`. Idealne do testowania prototypu z prawdziwym kontem testowym albo do automatyzacji workflow'ów z Twoimi danymi. **Trzymaj się jednak `chrome-devtools` plugin dla codziennej pracy** — jest prostszy, działa na headless Chrome, nie wymaga osobnej instalacji extension.
 
 ### Zarządzanie pluginami
 
@@ -704,10 +707,12 @@ Claude **automatycznie** powinien zauważyć skill i zacząć zadawać pytania p
 Zainstaluj plugin do scrapingu:
 
 ```
-> /plugin install playwright@claude-plugins-official
+> /plugin install chrome-devtools@claude-plugins-official
 ```
 
-Lub alternatywnie Firecrawl (jeśli wolisz prostsze API):
+`chrome-devtools` używa Puppeteer + Chrome DevTools Protocol pod spodem. Otwiera headless Chrome, pozwala Claude'owi nawigować po stronie, czytać HTML/CSS, robić screenshots, inspektować DOM. **Niczego nie musisz instalować ręcznie** — plugin sam zarządza headless Chrome.
+
+Lub alternatywnie Firecrawl (jeśli wolisz prostsze API i nie potrzebujesz pełnej kontroli nad przeglądarką):
 
 ```
 > /plugin marketplace add firecrawl/claude-plugin

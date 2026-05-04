@@ -235,6 +235,8 @@ fashionhero-moj-prototyp/
 
 ## Mapa materiałów
 
+> **Dwa formaty, ta sama treść.** Pliki `.md` i `.docx` w `docs/` są zsynchronizowane — wybierz format który Ci wygodniej czytać. `.docx` otwierasz w Wordzie/Pages (formatowanie, kolorowe nagłówki, callout boxy), `.md` w VS Code lub bezpośrednio na GitHubie. Edytuj `.md` — to source of truth, łatwiej go aktualizować.
+
 ### 1. Setup środowiska — `docs/01-setup-terminala-dla-ux.md`
 
 Instalacja niezbędnych narzędzi: Node.js, Git, GitHub CLI, Vercel CLI, Supabase CLI, Claude Code, jq. **Zacznij tu, jeśli nie masz jeszcze zainstalowanego środowiska developerskiego.**
@@ -255,7 +257,7 @@ Instalacja niezbędnych narzędzi: Node.js, Git, GitHub CLI, Vercel CLI, Supabas
 
 ### 3. Konfiguracja paczki — sekcja "Konfiguracja w szczegółach" w tym README
 
-Dokumentacja **konkretnej zawartości** `.claude/settings.json` w tej paczce — co robi każdy z 6 hooków, lista 5 polecanych pluginów, jak modyfikować permissions. Czytaj wtedy, gdy chcesz coś zmienić w configu lub gdy coś nie działa jak oczekujesz.
+Dokumentacja **konkretnej zawartości** `.claude/settings.json` w tej paczce — co robi każdy z 6 hooków, lista 7 polecanych pluginów + shadcn/ui skill, jak modyfikować permissions. Czytaj wtedy, gdy chcesz coś zmienić w configu lub gdy coś nie działa jak oczekujesz.
 
 ---
 
@@ -379,7 +381,7 @@ Format: `"plugin-name@marketplace-name": true`. Możesz tymczasowo wyłączyć p
 ```json
 "enabledPlugins": {
   ...istniejące...,
-  "playwright@claude-plugins-official": true
+  "code-review@claude-plugins-official": true
 }
 ```
 
