@@ -46,7 +46,7 @@ export function ProductCard({ product }: { product: Product }) {
       </Link>
       <Link href={`/products/${product.slug}`} className="block">
         <p className="text-[11px] text-muted-foreground mb-0.5">
-          {product.colors[0]}
+          {product.colors[0]?.name}
         </p>
         <p className="text-xs text-muted-foreground mb-1">
           Sold by {product.seller}
@@ -116,7 +116,7 @@ export function ProductCardGrid({ product }: { product: Product }) {
           )}
         </p>
         <p className="text-sm font-medium">{product.name}</p>
-        <p className="text-[11px] text-muted-foreground mb-1">{product.colors[0]}</p>
+        <p className="text-[11px] text-muted-foreground mb-1">{product.colors[0]?.name}</p>
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold">{product.price} zł</span>
           {product.originalPrice && (

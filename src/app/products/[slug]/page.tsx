@@ -93,15 +93,15 @@ export default async function ProductPage({ params }: Props) {
 
             {/* Color */}
             <div className="mb-4">
-              <p className="text-xs font-semibold tracking-wide mb-2">Color: {product.colors[0]}</p>
-              <div className="flex gap-2">
+              <p className="text-xs font-semibold tracking-wide mb-2">Color: {product.colors[0]?.name}</p>
+              <div className="flex gap-2 flex-wrap">
                 {product.colors.map((c) => (
                   <button
-                    key={c}
-                    className="text-[11px] px-3 py-1 border border-[#212121] hover:bg-[#212121] hover:text-white transition-colors"
-                  >
-                    {c}
-                  </button>
+                    key={c.name}
+                    title={c.name}
+                    className="w-7 h-7 rounded-full border-2 border-border hover:border-[#212121] transition-colors"
+                    style={{ backgroundColor: c.hex }}
+                  />
                 ))}
               </div>
             </div>
