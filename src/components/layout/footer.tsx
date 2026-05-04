@@ -1,107 +1,125 @@
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Share2 } from "lucide-react";
+
+const helpLinks = [
+  { label: "FAQ/Contact Us", href: "#" },
+  { label: "Returns/Exchanges", href: "#" },
+  { label: "Shipping Info", href: "#" },
+  { label: "Order Status", href: "#" },
+];
+
+const shopLinks = [
+  { label: "Men's Shoes", href: "/collections/mens" },
+  { label: "Women's Shoes", href: "/collections/womens" },
+  { label: "New Arrivals", href: "/collections/new-arrivals" },
+  { label: "Best Sellers", href: "/collections/best-sellers" },
+  { label: "Sale", href: "/collections/sale" },
+];
+
+const companyLinks = [
+  { label: "Our Story", href: "/about" },
+  { label: "Our Materials", href: "#" },
+  { label: "Sustainability", href: "#" },
+  { label: "Careers", href: "#" },
+  { label: "Press", href: "#" },
+];
+
+const socialLinks = ["Instagram", "TikTok", "Facebook", "X/Twitter"];
 
 // Server Component
 export function Footer() {
   return (
-    <footer className="bg-[#333] text-white mt-auto">
+    <footer className="bg-footer-bg text-white mt-auto">
       <div className="mx-auto max-w-7xl px-4 lg:px-8 py-16">
-        {/* Newsletter + social */}
-        <div className="mb-12 pb-10 border-b border-white/10 grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div>
-            <h3 className="text-xs font-semibold tracking-widest mb-3">FOLLOW THE FLOCK</h3>
-            <div className="flex gap-4">
-              <Link href="#" className="text-sm text-white/70 hover:text-white transition-colors">
-                Instagram
+        {/* Social row */}
+        <div className="mb-12 pb-10 border-b border-white/10">
+          <h3 className="text-[12px] font-medium uppercase tracking-[0.8px] text-white/50 mb-4">
+            FOLLOW THE FLOCK
+          </h3>
+          <div className="flex gap-5">
+            {socialLinks.map((s) => (
+              <Link
+                key={s}
+                href="#"
+                className="text-sm text-white/70 hover:text-white transition-colors"
+              >
+                {s}
               </Link>
-              <Link href="#" className="text-sm text-white/70 hover:text-white transition-colors">
-                TikTok
-              </Link>
-              <Link href="#" className="text-sm text-white/70 hover:text-white transition-colors">
-                Facebook
-              </Link>
-              <Link href="#" className="text-sm text-white/70 hover:text-white transition-colors">
-                X/Twitter
-              </Link>
-            </div>
-          </div>
-          <div>
-            <h3 className="text-xs font-semibold tracking-widest mb-3">JOIN THE FLOCK</h3>
-            <div className="flex gap-2 max-w-sm">
-              <Input
-                placeholder="Your email"
-                className="bg-white/10 border-white/20 text-white placeholder:text-white/40 rounded-none h-10 flex-1"
-              />
-              <Button className="bg-white text-[#333] hover:bg-white/90 rounded-none h-10 px-5 text-xs font-semibold tracking-wider">
-                Sign Up
-              </Button>
-            </div>
+            ))}
           </div>
         </div>
 
-        {/* Links grid */}
+        {/* 4 columns */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
-            <Link href="/" className="text-lg font-bold mb-4 block">
-              FashionHero
-            </Link>
-            <p className="text-sm text-white/60 leading-relaxed">
-              A marketplace where independent sellers and global brands meet fashion-conscious shoppers.
+            <h3 className="text-[12px] font-medium uppercase tracking-[0.8px] text-white/50 mb-4">
+              JOIN THE FLOCK
+            </h3>
+            <p className="text-sm text-white/60 mb-4 leading-relaxed">
+              Get the latest on new products, exclusive deals, and more.
             </p>
+            <form className="flex flex-col gap-3">
+              <input
+                type="email"
+                placeholder="Email Address"
+                className="w-full bg-transparent border-b border-white/30 px-0 py-2 text-sm placeholder:text-white/30 focus:outline-none focus:border-white transition-colors"
+              />
+              <button
+                type="submit"
+                className="self-start px-6 py-2 text-[11px] font-medium uppercase tracking-wider text-charcoal bg-white rounded-full hover:bg-white/90 transition-colors"
+              >
+                Sign Up
+              </button>
+            </form>
           </div>
-          <div>
-            <h3 className="text-xs font-semibold tracking-widest mb-4">HELP</h3>
-            <ul className="space-y-2">
-              {["FAQ/Contact Us", "Returns/Exchanges", "Shipping Info", "Order Status"].map((l) => (
-                <li key={l}>
-                  <Link href="#" className="text-sm text-white/60 hover:text-white transition-colors">
-                    {l}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-xs font-semibold tracking-widest mb-4">SHOP</h3>
-            <ul className="space-y-2">
-              {[
-                { label: "Men's Shoes", href: "/collections/mens?category=shoes" },
-                { label: "Women's Shoes", href: "/collections/womens?category=shoes" },
-                { label: "New Arrivals", href: "/collections/new-arrivals" },
-                { label: "Sale", href: "/collections/sale" },
-              ].map((l) => (
-                <li key={l.href}>
-                  <Link href={l.href} className="text-sm text-white/60 hover:text-white transition-colors">
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h3 className="text-xs font-semibold tracking-widest mb-4">COMPANY</h3>
-            <ul className="space-y-2">
-              {[
-                { label: "Our Story", href: "/about" },
-                { label: "Our Materials", href: "#" },
-                { label: "Sell on FashionHero", href: "#" },
-              ].map((l) => (
-                <li key={l.label}>
-                  <Link href={l.href} className="text-sm text-white/60 hover:text-white transition-colors">
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+
+          <FooterColumn title="HELP" links={helpLinks} />
+          <FooterColumn title="SHOP" links={shopLinks} />
+          <FooterColumn title="COMPANY" links={companyLinks} />
         </div>
 
-        <div className="mt-12 pt-6 border-t border-white/10 text-xs text-white/40">
-          © 2026 FashionHero, Inc. All Rights Reserved.
+        {/* Bottom bar — logo + currency + copyright */}
+        <div className="mt-14 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-6">
+            <span className="text-lg font-semibold italic tracking-tight">
+              FashionHero
+            </span>
+            <span className="text-xs text-white/40 border border-white/20 px-3 py-1 rounded">
+              US ($)
+            </span>
+          </div>
+          <p className="text-xs text-white/30">
+            © 2026 FashionHero, Inc. All Rights Reserved.
+          </p>
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: { label: string; href: string }[];
+}) {
+  return (
+    <div>
+      <h3 className="text-[12px] font-medium uppercase tracking-[0.8px] text-white/50 mb-4">
+        {title}
+      </h3>
+      <ul className="space-y-2.5">
+        {links.map((l) => (
+          <li key={l.label}>
+            <Link
+              href={l.href}
+              className="text-sm text-white/70 hover:text-white transition-colors"
+            >
+              {l.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
