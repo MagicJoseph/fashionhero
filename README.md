@@ -43,17 +43,20 @@ W terminalu:
 # Wejdź do folderu, w którym trzymasz projekty
 cd ~/Documents/projekty
 
-# Sklonuj swoje świeże repo (zamień nazwę na własną)
-gh repo clone TwojLogin/fashionhero-moj-prototyp
+# Sklonuj swoje świeże repo
+# (zamień TwojLoginGitHub na swój username z GitHub, a nazwę repo na tę którą wybrałeś w Kroku 1)
+gh repo clone TwojLoginGitHub/fashionhero-moj-prototyp
 cd fashionhero-moj-prototyp
 ```
 
 Lub, jeśli wolisz `git clone`:
 
 ```bash
-git clone https://github.com/TwojLogin/fashionhero-moj-prototyp.git
+git clone https://github.com/TwojLoginGitHub/fashionhero-moj-prototyp.git
 cd fashionhero-moj-prototyp
 ```
+
+> **Skąd wziąć swój login GitHub?** Otwórz https://github.com — w prawym górnym rogu kliknij awatar; pierwsza linijka w menu to Twój login. Lub w terminalu: `gh api user --jq .login`.
 
 ### Krok 3: Sprawdź wymagane narzędzia
 
